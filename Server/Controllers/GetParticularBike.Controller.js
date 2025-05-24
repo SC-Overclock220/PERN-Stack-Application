@@ -1,8 +1,7 @@
 import { db } from "../Config/Connect2DB.js";
-import deleteBike from "../DB/DeleteBike.DB.js";
+import getOneParticularBike from "../DB/GetParticularBike.DB.js";
 
-const deleteBikes = async (req, res) => {
-
+const getParticularBike = async (req,res) => {
 
 
     const { id } = req.params;
@@ -11,13 +10,13 @@ const deleteBikes = async (req, res) => {
     try {
 
 
-        const data = await db.query(deleteBike(id));
+        const data = await db.query(getOneParticularBike(id));
         console.log(data);
 
         if (data.rowCount === 0)
             return res.status(400).json({ message: `No Entries Found With The Given ID`, success: false });
 
-        return res.status(200).json({ message: `Data Deleted Successfully`, success: true });
+        return res.status(200).json({ message: `Data Fetched Successfully`, success: true, bike: data.rows[0] });
 
     } catch (error) {
 
@@ -26,8 +25,6 @@ const deleteBikes = async (req, res) => {
 
     }
 
-
 }
 
-
-export default deleteBikes;
+export default getParticularBike;
