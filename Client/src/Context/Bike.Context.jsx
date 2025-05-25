@@ -14,6 +14,32 @@ const BikeContextProvider = ({ children }) => {
     const [modalMode, setModalMode] = useState(null);
     const [bikeData, setBikeData] = useState(modalMode === 'edit' ? () => fetchData(index) : { id: 0, modelName: "", manufacturerName: "", engineDisplacement: 0, transmission: "", gearbox: 0, tankCapacity: 0, power: 0, torque: 0, price: 0 });
 
+    const [searchQuery, setSearchQuery] = useState("");
+
+
+
+    const handleSearchQuery = async (e) => {
+
+        e.preventDefault();
+
+
+        try {
+
+            const { data } = await axios.post(`${baseURL}/searchBike`, { searchQuery: searchQuery.toLowerCase() });
+            console.log(data);
+            setBikes(data.rows);
+
+        } catch (error) {
+
+            console.log(error);
+            throw new Error(error.message);
+
+        }
+
+
+
+    }
+
 
     const handleSubmit = async (e) => {
 
@@ -153,7 +179,7 @@ const BikeContextProvider = ({ children }) => {
 
 
 
-    return <BikeContext.Provider value={{ bikes, handleOpenModal, handleCloseModal, modalMode, openModalForm, handleSubmit, bikeData, fetchData, setBikeData, deleteBike }}>
+    return <BikeContext.Provider value={{ bikes, handleOpenModal, handleCloseModal, modalMode, openModalForm, handleSubmit, bikeData, fetchData, setBikeData, deleteBike, setSearchQuery, handleSearchQuery, searchQuery }}>
 
         {children}
     </BikeContext.Provider>
